@@ -31,18 +31,29 @@ router.get("/:id", async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
 router.post(
   "/:id/tracks",
   requireUser,
-  requireBody(["name", "duration_ms"]),
+  requireBody(["trackId"]),
   async (req, res) => {
-    const { name, duration_ms } = req.body;
-    const track = await createTrack(
-      req.track.id,
-      req.user.id,
-        name, 
-      duration_ms,
-        );
-        res.status(201).send(track)
-  }
-);
+     const playlistId = Number(req.params.id);
+  const { trackId } = req.body;
+
+  if (!playlistId || trackId === undefined) return res.status(400).send({ error: "Missing playlistId or trackId" });
+   
+  const playlist = await getPlaylistById(playlistId);
+  if (!playlist) return res.status(404).send({ error: "Playlist not found" });
+
+  if (playlist.user_id !== req.user.id) return res.status(403).send({ error: "Forbidden" });
+
+  const addedTrack = await addTrackToPlaylist(playlistId, trackId);
+
+  res.status(201).send(addedTrack);
+});

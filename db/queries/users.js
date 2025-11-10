@@ -11,14 +11,15 @@ export async function createUser(username, password) {
     ($1, $2)
     RETURNING *
     `;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const values = [username, hashedPassword]
-    const {
+ const hashedPassword = await bcrypt.hash(password, 10);
+   const {
         rows: [user],
-    } = await db.query(sql, values);
+    } = await db.query(sql, [username, hashedPassword]);
+    
     return user;
 } catch (error) {
 console.error("There was an Error Creating User", error);
+throw error;
 }
 }
 
