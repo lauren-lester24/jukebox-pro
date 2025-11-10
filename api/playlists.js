@@ -51,16 +51,45 @@ router.get("/:id", (req, res) => {
 });
 
 router.get("/:id/tracks", async (req, res) => {
-  const tracks = await getTracksByPlaylistId(req.playlist.id);
-  res.send(tracks);
+try {
+
+  if (req.user.id !== req.playlist.user_id) {
+    return res
+    .status(403)
+    .send("You are not authorized to view this plalist's tracks.");
+  }
+const tracks = await getTracksByPlaylistId(req.playlist.id);  
+
+   res.send(tracks);
+   } catch (error) {
+  res.status(500).send({ error: error.message });
+   }
 });
 
 router.post("/:id/tracks", async (req, res) => {
-  if (!req.body) return res.status(400).send("Request body is required.");
 
-  const { trackId } = req.body;
-  if (!trackId) return res.status(400).send("Request body requires: trackId");
+  try {
+   
+     const { trackId }  = req.body;
 
-  const playlistTrack = await createPlaylistTrack(req.playlist.id, trackId);
-  res.status(201).send(playlistTrack);
+      if (!trackId) {
+        
+        return res.status(400).send("Request body requires: trackId");
+      }
+
+      if (req.user.id !== req.playlist.user_id) {
+        return res
+        .status(403)
+        .send("You are not authorized to modify this Playlist");
+      }
+
+      const playlistTrack = await createPlaylistTrack(req.playlistid, trackId);
+       res
+       .status(201).send(playlistTrack);
+  } catch (error) {
+     res
+     .status(500).send({ error: error.message });
+  }
+ 
+
 });

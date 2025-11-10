@@ -32,5 +32,4 @@ const user2 = await createUser("musicismyjam", "Rockandroll!");
 for (let i = 3; i <= 8; i++) {
   await createPlaylist(i + , user2.id, 2, "2222-02-20");
 
-
 }
