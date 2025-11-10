@@ -3,6 +3,7 @@ import db from "#db/client";
 import { createPlaylist } from "#db/queries/playlists";
 import { createPlaylistTrack } from "#db/queries/playlists_tracks";
 import { createTrack } from "#db/queries/tracks";
+import { createUser } from "#db/queries/users";
 
 await db.connect();
 await seed();
@@ -18,4 +19,18 @@ async function seed() {
     const playlistId = 1 + Math.floor(i / 2);
     await createPlaylistTrack(playlistId, i);
   }
+}
+
+const user1 = await createUser("plantlady100", "Iloveplants");
+for (let i = 1; i <= 5; i++) {
+  await createPlaylist(i, user1.id, 1, "1111-11-11");
+ 
+  
+}
+
+const user2 = await createUser("musicismyjam", "Rockandroll!");
+for (let i = 3; i <= 8; i++) {
+  await createPlaylist(i + , user2.id, 2, "2222-02-20");
+
+
 }

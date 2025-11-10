@@ -7,8 +7,7 @@ id serial PRIMARY KEY,
 user_id integer REFERENCES users(id) ON DELETE CASCADE,
 email text UNIQUE NOT NULL,
 password text NOT NULL
-
-)
+);
 
 CREATE TABLE tracks (
   id serial PRIMARY KEY,
